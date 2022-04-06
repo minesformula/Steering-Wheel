@@ -88,7 +88,7 @@ void setVoltage(float value){
     float low = 12.5;
     float min = 12.0;
 
-    String instruction = "voltvalue.txt=\"" + String(value, DEC) + " V\"";
+    String instruction = "voltvalue.txt=\"" + String(value, 2) + " V\"";
     sendNextionMessage(instruction);
 
     if(value > max || value < min){
@@ -106,11 +106,19 @@ void setVoltage(float value){
 }
 
 void setRPM(unsigned short value){
-    
+    String instruction = "rpm.txt=\"" + String(value, DEC) + "\"";
+    sendNextionMessage(instruction);
 }
 
 void setGear(unsigned short value){
-    
+    String instruction = "";
+    if(value == 0){
+        instruction = "gear.txt=\"N\"";
+    }
+    else{
+        instruction = "gear.txt=\"" + String(value, DEC) +"\"";
+    }
+    sendNextionMessage(instruction);
 }
 
 void setFuelPumpBool(bool value){
@@ -209,12 +217,46 @@ void setWaterPumpValue(bool value){
     }
 }
 
-void setLambda(unsigned short value){
-    
+void setLambda(float value){
+    float max = 1.5;
+    float high = 1.2;
+    float low = 0.8;
+    float min = 0.5;
+
+    String instruction = "lambdavalue.txt=\"" + String(value, 2) + " V\"";
+    sendNextionMessage(instruction);
+
+    if(value > max || value < min){
+        instruction = "lambdavalue.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+    }
+    else if(value > high || value < low){
+        instruction = "lambdavalue.bco=" + String(RGB565_ORANGE, DEC);
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "lambdavalue.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+    }
 }
 
-void setNeutral(unsigned short value){
-    
+void setNeutral(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "neutralvalue.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "neutralvalue.txt=\"ON\"";
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "neutralvalue.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "neutralvalue.txt=\"OFF\"";
+        sendNextionMessage(instruction);
+    }
 }
 
 void switchToLoading(){

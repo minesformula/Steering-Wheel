@@ -25,9 +25,9 @@ void setFanValue(bool value);
 
 void setWaterPumpValue(bool value);
 
-void setLambda(unsigned short value);
+void setLambda(float value);
 
-void setNeutral(unsigned short value);
+void setNeutral(bool value);
 
 void switchToLoading();
 
