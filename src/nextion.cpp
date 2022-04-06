@@ -60,7 +60,26 @@ void setOilTemp(unsigned short value){
 }
 
 void setOilPressure(unsigned short value){
-    
+    unsigned short max = 80;
+    unsigned short high = 70;
+    unsigned short low = 50;
+    unsigned short min = 40;
+
+    String instruction = "oilpressvalue.txt=\"" + String(value, DEC) + " PSI\"";
+    sendNextionMessage(instruction);
+
+    if(value > max || value < min){
+        instruction = "oilpressvalue.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+    }
+    else if(value > high || value < low){
+        instruction = "oilpressvalue.bco=" + String(RGB565_ORANGE, DEC);
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "oilpressvalue.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+    }
 }
 
 void setVoltage(float value){
@@ -94,16 +113,100 @@ void setGear(unsigned short value){
     
 }
 
-void setFuelPump(bool value){
-    
+void setFuelPumpBool(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "fuelpumpbool.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "fuelpumpbool.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+    }
 }
 
-void setFan(bool value){
-    
+void setFanBool(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "fanbool.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "fanbool.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+    }
 }
 
-void setWaterPump(bool value){
-    
+void setWaterPumpBool(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "waterpumpbool.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "waterpumpbool.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+    }
+}
+
+void setFuelPumpValue(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "fuelpumpvalue.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "fuelpumpvalue.txt=\"ON\"";
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "fuelpumpvalue.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "fuelpumpvalue.txt=\"OFF\"";
+        sendNextionMessage(instruction);
+    }
+}
+
+void setFanValue(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "fanvalue.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "fanvalue.txt=\"ON\"";
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "fanvalue.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "fanvalue.txt=\"OFF\"";
+        sendNextionMessage(instruction);
+    }
+}
+
+void setWaterPumpValue(bool value){
+    String instruction = "";
+
+    if(value){
+        instruction = "waterpumpvalue.bco=" + String(RGB565_GREEN, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "waterpumpvalue.txt=\"ON\"";
+        sendNextionMessage(instruction);
+    }
+    else{
+        instruction = "waterpumpvalue.bco=" + String(RGB565_RED, DEC);
+        sendNextionMessage(instruction);
+
+        instruction = "waterpumpvalue.txt=\"OFF\"";
+        sendNextionMessage(instruction);
+    }
 }
 
 void setLambda(unsigned short value){
