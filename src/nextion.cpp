@@ -13,11 +13,14 @@ void sendNextionMessage(String message){
   Serial1.write(0xFF);
 }
 
-void setWaterTemp(unsigned short value){
+void setWaterTemp(unsigned short value, bool conversion){
     unsigned short max = 200;
     unsigned short high = 180;
     unsigned short low = 60;
     unsigned short min = 40;
+
+    if(conversion)
+        value = (value * 9/5) +32;
 
     String instruction = "watertempvalue.txt=\"" + String(value, DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);

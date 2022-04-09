@@ -1,7 +1,7 @@
 #ifndef NEXTION_H
 #define NEXTION_H
 
-void setWaterTemp(unsigned short value);
+void setWaterTemp(unsigned short value, bool conversion);
 
 void setOilTemp(unsigned short value);
 
