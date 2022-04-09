@@ -31,6 +31,32 @@ void canSniff(const CAN_message_t &msg) {
       if(msg.buf[0] == 48){
         setVoltage(msg.buf[2] * 0.1216);
       }
+      break;
+
+    case 1284:
+        Serial.print(msg.buf[1]);
+        Serial.print(msg.buf[2]);
+        Serial.print(msg.buf[3]);
+        Serial.print(msg.buf[4]);
+        Serial.print(msg.buf[5]);
+        Serial.print(msg.buf[6]);
+        Serial.println(msg.buf[7]);
+      if(msg.buf[0] == 0){
+        if(msg.buf[1] == 0 || msg.buf[1] == 1)
+          setWaterPumpValue(msg.buf[1]);
+        else
+          Serial.println("Water Pump Error");
+
+        if(msg.buf[2] == 0 || msg.buf[2] == 1){}
+          //setFuelPumpValue(msg.buf[2]);
+        else
+          Serial.println("Fuel Pump Error");
+
+        if(msg.buf[3] == 0 || msg.buf[3] == 1)
+          setFanValue(msg.buf[3]);
+        else
+          Serial.println("Fan Error");
+      }
       
       break;
     
