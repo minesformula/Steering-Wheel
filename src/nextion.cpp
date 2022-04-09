@@ -1,28 +1,31 @@
 #include "nextion.h"
-#include <Arduino.h>
 
-int const RGB565_GREEN = 1472;
-int const RGB565_ORANGE = 47936;
-int const RGB565_RED = 45056;
-int const RGB565_BLACK = 0;
+NextionInterface::NextionInterface(){}
 
-void sendNextionMessage(String message){
+void NextionInterface::init(){
+    Serial1.begin(115200);
+    delay(200);
+    Serial.println("Nextion Setup");
+}
+
+short NextionInterface::ctof(short celsius){
+    return (celsius * 9/5) +32;
+}
+
+void NextionInterface::sendNextionMessage(String message){
   Serial1.print(message);
   Serial1.write(0xFF);
   Serial1.write(0xFF);
   Serial1.write(0xFF);
 }
 
-void setWaterTemp(unsigned short value, bool conversion){
+void NextionInterface::setWaterTemp(unsigned short value){
     unsigned short max = 200;
     unsigned short high = 180;
     unsigned short low = 60;
     unsigned short min = 40;
 
-    if(conversion)
-        value = (value * 9/5) +32;
-
-    String instruction = "watertempvalue.txt=\"" + String(value, DEC) + " " + char(176) + "F\"";
+    String instruction = "watertempvalue.txt=\"" + String(ctof(value), DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
 
     if(value > max || value < min){
@@ -39,13 +42,13 @@ void setWaterTemp(unsigned short value, bool conversion){
     }
 }
 
-void setOilTemp(unsigned short value){
+void NextionInterface::setOilTemp(unsigned short value){
     unsigned short max = 200;
     unsigned short high = 180;
     unsigned short low = 60;
     unsigned short min = 40;
 
-    String instruction = "oiltempvalue.txt=\"" + String(value, DEC) + " " + char(176) + "F\"";
+    String instruction = "oiltempvalue.txt=\"" + String(ctof(value), DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
 
     if(value > max || value < min){
@@ -62,7 +65,7 @@ void setOilTemp(unsigned short value){
     }
 }
 
-void setOilPressure(unsigned short value){
+void NextionInterface::setOilPressure(unsigned short value){
     unsigned short max = 80;
     unsigned short high = 70;
     unsigned short low = 50;
@@ -85,7 +88,7 @@ void setOilPressure(unsigned short value){
     }
 }
 
-void setVoltage(float value){
+void NextionInterface::setVoltage(float value){
     float max = 15.0;
     float high = 14.0;
     float low = 12.5;
@@ -108,12 +111,12 @@ void setVoltage(float value){
     }
 }
 
-void setRPM(unsigned short value){
+void NextionInterface::setRPM(unsigned short value){
     String instruction = "rpm.txt=\"" + String(value, DEC) + "\"";
     sendNextionMessage(instruction);
 }
 
-void setGear(unsigned short value){
+void NextionInterface::setGear(unsigned short value){
     String instruction = "";
     if(value == 0){
         instruction = "gear.txt=\"N\"";
@@ -124,7 +127,7 @@ void setGear(unsigned short value){
     sendNextionMessage(instruction);
 }
 
-void setFuelPumpBool(bool value){
+void NextionInterface::setFuelPumpBool(bool value){
     String instruction = "";
 
     if(value){
@@ -137,7 +140,7 @@ void setFuelPumpBool(bool value){
     }
 }
 
-void setFanBool(bool value){
+void NextionInterface::setFanBool(bool value){
     String instruction = "";
 
     if(value){
@@ -150,7 +153,7 @@ void setFanBool(bool value){
     }
 }
 
-void setWaterPumpBool(bool value){
+void NextionInterface::setWaterPumpBool(bool value){
     String instruction = "";
 
     if(value){
@@ -163,7 +166,7 @@ void setWaterPumpBool(bool value){
     }
 }
 
-void setFuelPumpValue(bool value){
+void NextionInterface::setFuelPumpValue(bool value){
     String instruction = "";
 
     if(value){
@@ -182,7 +185,7 @@ void setFuelPumpValue(bool value){
     }
 }
 
-void setFanValue(bool value){
+void NextionInterface::setFanValue(bool value){
     String instruction = "";
 
     if(value){
@@ -201,7 +204,7 @@ void setFanValue(bool value){
     }
 }
 
-void setWaterPumpValue(bool value){
+void NextionInterface::setWaterPumpValue(bool value){
     String instruction = "";
 
     if(value){
@@ -220,7 +223,7 @@ void setWaterPumpValue(bool value){
     }
 }
 
-void setLambda(float value){
+void NextionInterface::setLambda(float value){
     float max = 1.5;
     float high = 1.2;
     float low = 0.8;
@@ -243,7 +246,7 @@ void setLambda(float value){
     }
 }
 
-void setNeutral(bool value){
+void NextionInterface::setNeutral(bool value){
     String instruction = "";
 
     if(value){
@@ -262,14 +265,14 @@ void setNeutral(bool value){
     }
 }
 
-void switchToLoading(){
+void NextionInterface::switchToLoading(){
     sendNextionMessage("page loading");
 }
 
-void switchToStartUp(){
+void NextionInterface::switchToStartUp(){
     sendNextionMessage("page startup");
 }
 
-void switchToDriver(){
+void NextionInterface::switchToDriver(){
     sendNextionMessage("page driver");
 }

@@ -1,38 +1,55 @@
 #ifndef NEXTION_H
 #define NEXTION_H
 
-void setWaterTemp(unsigned short value, bool conversion);
+#include <Arduino.h>
+class NextionInterface{
+private:
+    static short ctof(short celsius);
 
-void setOilTemp(unsigned short value);
+    static void sendNextionMessage(String message);
 
-void setOilPressure(unsigned short value);
+    static int const RGB565_GREEN = 1472;
+    static int const RGB565_ORANGE = 47936;
+    static int const RGB565_RED = 45056;
+    static int const RGB565_BLACK = 0;
+public:
+    NextionInterface();
 
-void setVoltage(float value);
+    static void init();
 
-void setRPM(unsigned short value);
+    static void setWaterTemp(unsigned short value);
 
-void setGear(unsigned short value);
+    static void setOilTemp(unsigned short value);
 
-void setFuelPumpBool(bool value);
+    static void setOilPressure(unsigned short value);
 
-void setFanBool(bool value);
+    static void setVoltage(float value);
 
-void setWaterPumpBool(bool value);
+    static void setRPM(unsigned short value);
 
-void setFuelPumpValue(bool value);
+    static void setGear(unsigned short value);
 
-void setFanValue(bool value);
+    static void setFuelPumpBool(bool value);
 
-void setWaterPumpValue(bool value);
+    static void setFanBool(bool value);
 
-void setLambda(float value);
+    static void setWaterPumpBool(bool value);
 
-void setNeutral(bool value);
+    static void setFuelPumpValue(bool value);
 
-void switchToLoading();
+    static void setFanValue(bool value);
 
-void switchToStartUp();
+    static void setWaterPumpValue(bool value);
 
-void switchToDriver();
+    static void setLambda(float value);
+
+    static void setNeutral(bool value);
+
+    static void switchToLoading();
+
+    static void switchToStartUp();
+
+    static void switchToDriver();
+};
 
 #endif //NEXTION_H 
