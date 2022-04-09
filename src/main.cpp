@@ -3,27 +3,38 @@
 #include <FlexCAN_T4.h>
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0;
 
+bool car_on = false;
+
 void canSniff(const CAN_message_t &msg) {
-  Serial.print("MB "); Serial.print(msg.mb);
-  Serial.print("  OVERRUN: "); Serial.print(msg.flags.overrun);
-  Serial.print("  LEN: "); Serial.print(msg.len);
-  Serial.print(" EXT: "); Serial.print(msg.flags.extended);
-  Serial.print(" TS: "); Serial.print(msg.timestamp);
-  Serial.print(" ID: "); Serial.print(msg.id, DEC);
-  Serial.print(" Buffer: ");
-  for ( uint8_t i = 0; i < msg.len; i++ ) {
-    Serial.print(msg.buf[i], DEC); Serial.print(" ");
-  } Serial.println();
+  // Serial.print("MB "); Serial.print(msg.mb);
+  // Serial.print("  OVERRUN: "); Serial.print(msg.flags.overrun);
+  // Serial.print("  LEN: "); Serial.print(msg.len);
+  // Serial.print(" EXT: "); Serial.print(msg.flags.extended);
+  // Serial.print(" TS: "); Serial.print(msg.timestamp);
+  // Serial.print(" ID: "); Serial.print(msg.id, DEC);
+  // Serial.print(" Buffer: ");
+  // for ( uint8_t i = 0; i < msg.len; i++ ) {
+  //   Serial.print(msg.buf[i], DEC); Serial.print(" ");
+  // } Serial.println();
 
   switch (msg.id)
   {
-    case 281:
+    case 280:
       setWaterTemp(msg.buf[3], true);
-      Serial.println("Updated Temp");
+      break;
+
+    case 281:
+      setNeutral((msg.buf[4] & 16 ) << 0x10);
+      break;
+
+    case 1280:
+      if(msg.buf[0] == 48){
+        setVoltage(msg.buf[2] * 0.1216);
+      }
+      
       break;
     
     default:
-    Serial.println("Hello");
       break;
     }
 }
@@ -61,7 +72,6 @@ void loop() {
     timeout = millis();
 
     setOilTemp(random()%210);
-    setVoltage(random()%4 + 10);
   }
 
 }
