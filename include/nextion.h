@@ -2,9 +2,14 @@
 #define NEXTION_H
 
 #include <Arduino.h>
+
+enum page { LOADING, STARTUP, DRIVER};
+
 class NextionInterface{
 private:
     static short ctof(short celsius);
+
+    static page current_page;
 
     static void sendNextionMessage(String message);
 
@@ -50,6 +55,8 @@ public:
     static void switchToStartUp();
 
     static void switchToDriver();
+
+    static page getCurrentPage();
 };
 
 #endif //NEXTION_H 

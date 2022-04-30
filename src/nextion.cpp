@@ -1,5 +1,7 @@
 #include "nextion.h"
 
+page NextionInterface::current_page = page::LOADING;
+
 NextionInterface::NextionInterface(){}
 
 void NextionInterface::init(){
@@ -20,12 +22,14 @@ void NextionInterface::sendNextionMessage(String message){
 }
 
 void NextionInterface::setWaterTemp(unsigned short value){
+    value = ctof(value);
+
     unsigned short max = 200;
     unsigned short high = 180;
-    unsigned short low = 60;
-    unsigned short min = 40;
+    unsigned short low = 40;
+    unsigned short min = 32;
 
-    String instruction = "watertempvalue.txt=\"" + String(ctof(value), DEC) + " " + char(176) + "F\"";
+    String instruction = "watertempvalue.txt=\"" + String(value, DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
 
     if(value > max || value < min){
@@ -267,12 +271,19 @@ void NextionInterface::setNeutral(bool value){
 
 void NextionInterface::switchToLoading(){
     sendNextionMessage("page loading");
+    current_page = page::LOADING;
 }
 
 void NextionInterface::switchToStartUp(){
     sendNextionMessage("page startup");
+    current_page = page::STARTUP;
 }
 
 void NextionInterface::switchToDriver(){
     sendNextionMessage("page driver");
+    current_page = page::DRIVER;
+}
+
+page NextionInterface::getCurrentPage(){
+    return current_page;
 }

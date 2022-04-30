@@ -4,7 +4,9 @@
 
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> CanInterface::Can0;
 
-CanInterface::CanInterface(){
+CanInterface::CanInterface(){}
+
+bool CanInterface::init(){
     pinMode(6, OUTPUT); digitalWrite(6, LOW); /* optional tranceiver enable pin */
     Can0.begin();
     Can0.setBaudRate(1000000);
@@ -13,7 +15,7 @@ CanInterface::CanInterface(){
     Can0.enableFIFOInterrupt();
     Can0.onReceive(receive_can_updates);
     Can0.mailboxStatus();
-    Serial.println("Can Interface Setup");
+    return 1;
 }
 
 void CanInterface::print_can_sniff(const CAN_message_t &msg){
@@ -31,8 +33,18 @@ void CanInterface::print_can_sniff(const CAN_message_t &msg){
 }
 
 void CanInterface::receive_can_updates(const CAN_message_t &msg){
+    page currentPage = NextionInterface::getCurrentPage();
+
+    if(msg.id == 280){
+        if(msg.buf[0] > 2 && (currentPage != page::DRIVER))
+            NextionInterface::switchToDriver();
+        else if(msg.buf[0] <= 2 && (currentPage != page::STARTUP))
+            NextionInterface::switchToStartUp();
+    }
+
     switch (msg.id){
         case 280:
+            NextionInterface::setRPM(msg.buf[0]);
             NextionInterface::setWaterTemp(msg.buf[3]);
             break;
 
@@ -48,18 +60,24 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
 
         case 1284:
             if(msg.buf[0] == 0 || msg.buf[0] == 1){
-                if(msg.buf[1] == 0 || msg.buf[1] == 1)
+                if(msg.buf[1] == 0 || msg.buf[1] == 1){
                     NextionInterface::setWaterPumpValue(msg.buf[1]);
+                    NextionInterface::setWaterPumpBool(msg.buf[1]);
+                } 
                 else
                     Serial.println("Water Pump Error");
 
-                if(msg.buf[0] == 0 || msg.buf[0] == 1)
+                if(msg.buf[0] == 0 || msg.buf[0] == 1){
                     NextionInterface::setFuelPumpValue(msg.buf[0]);
+                    NextionInterface::setFuelPumpBool(msg.buf[0]);
+                }   
                 else
                     Serial.println("Fuel Pump Error");
 
-                if(msg.buf[3] == 0 || msg.buf[3] == 1)
+                if(msg.buf[3] == 0 || msg.buf[3] == 1){
                     NextionInterface::setFanValue(msg.buf[3]);
+                    NextionInterface::setFanBool(msg.buf[3]);
+                }
                 else
                     Serial.println("Fan Error");
             }
@@ -70,14 +88,14 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
     }
 }
 
-void CanInterface::task(){
-    Can0.events();
+void CanInterface::send_shift(const bool up, const bool down){
+    CAN_message_t msg;
+    msg.id = 0x7DA;
+    msg.buf[0] = up;
+    msg.buf[1] = down;
+    Can0.write(msg);
 }
 
-bool CanInterface::valid_signal(){
-    // CAN_message_t msg;
-    // if(Can0.read(msg) && (msg.id)){
-    //     // msg.id
-    // }
-    return 0;
+void CanInterface::task(){
+    Can0.events();
 }
