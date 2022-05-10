@@ -1,4 +1,5 @@
 #include "main.h"
+#include "neopixel.h"
 
 int const shiftUp = 2;
 int const shiftDown = 3;
@@ -7,6 +8,7 @@ void setup(void) {
   pinMode(shiftUp, INPUT_PULLUP);
   pinMode(shiftDown, INPUT_PULLUP);
   
+  RevLights lights{};
 
   delay(400);
   Serial.begin(115200);
@@ -19,6 +21,8 @@ void setup(void) {
   if(CanInterface::init()){ // If CAN setup then go to startup
     NextionInterface::switchToStartUp();
   }
+
+  
 }
 
 bool shiftUpState = false;
