@@ -14,15 +14,8 @@ void setup(void) {
   Serial.begin(115200);
 
   NextionInterface::init(); // Creates Serial Port to Display
-  delay(100);
 
-  Serial.println(CanInterface::init());
-
-  if(CanInterface::init()){ // If CAN setup then go to startup
-    NextionInterface::switchToStartUp();
-  }
-
-  
+  CanInterface::init();  
 }
 
 bool shiftUpState = false;
@@ -50,5 +43,5 @@ void loop() {
     shiftUpState = false;
   }
   
-  delay(10);
+  delay(1);
 }

@@ -8,6 +8,7 @@ void NextionInterface::init(){
     Serial1.begin(115200);
     delay(200);
     Serial.println("Nextion Setup");
+    switchToLoading();
 }
 
 short NextionInterface::ctof(short celsius){

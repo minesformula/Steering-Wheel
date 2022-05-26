@@ -1,10 +1,13 @@
 #include "Arduino.h"
 #include "can.h"
 #include "nextion.h"
+#include "neopixel.h"
 
 FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> CanInterface::Can0;
 
 CanInterface::CanInterface(){}
+
+bool CanInterface::canActive = false;
 
 bool CanInterface::init(){
     pinMode(6, OUTPUT); digitalWrite(6, LOW); /* optional tranceiver enable pin */
@@ -34,6 +37,7 @@ void CanInterface::print_can_sniff(const CAN_message_t &msg){
 
 void CanInterface::receive_can_updates(const CAN_message_t &msg){
     page currentPage = NextionInterface::getCurrentPage();
+    canActive = true;
 
     if(msg.id == 280){
         if(msg.buf[0] > 2 && (currentPage != page::DRIVER))
@@ -44,8 +48,9 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
 
     switch (msg.id){
         case 280:
-            NextionInterface::setRPM(msg.buf[0]);
+            NextionInterface::setRPM(msg.buf[0] * 100);
             NextionInterface::setWaterTemp(msg.buf[3]);
+            RevLights::rpmBased(msg.buf[0] * 100);
             break;
 
         case 281:
