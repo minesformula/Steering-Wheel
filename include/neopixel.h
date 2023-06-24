@@ -24,7 +24,11 @@ private:
 
 public:
     RevLights(){
-        init();
+
+    }
+
+    void setPixel(uint16_t n, uint32_t c){
+        pixels.setPixelColor(n, c);
     }
 
     void static init(){
@@ -34,7 +38,6 @@ public:
         pixels.show();
 
         delay(50);
-        rpmBased(0);
     }
 
     void static rpmBased(int rpm){

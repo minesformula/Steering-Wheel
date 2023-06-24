@@ -17,6 +17,7 @@ bool CanInterface::init(){
     Can0.enableFIFO();
     Can0.enableFIFOInterrupt();
     Can0.onReceive(receive_can_updates);
+    //Can0.onReceive(print_can_sniff);
     Can0.mailboxStatus();
     return 1;
 }
