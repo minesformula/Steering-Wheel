@@ -3,13 +3,13 @@
 #ifndef NEOPIXEL_H
 #define NEOPIXEL_H
 
-class RevLights{
+class RevLights
+{
 private:
     static int LEDPINS;
     static int NUMPIXELS;
 
     static Adafruit_NeoPixel pixels;
-
 
     static const int lightRed = (255 << 16) | (20 << 8) | 0;
     static const int darkRed = (255 << 16) | (0 << 8) | 0;
@@ -23,13 +23,15 @@ private:
     static const int blank = 0;
 
 public:
-    RevLights(){
+    RevLights()
+    {
         init();
     }
 
-    void static init(){
-        pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
-        pixels.setBrightness(50); // Normal 150
+    void static init()
+    {
+        pixels.begin();           // INITIALIZE NeoPixel strip object (REQUIRED)
+        pixels.setBrightness(75); // Normal 150
         pixels.clear();
         pixels.show();
 
@@ -37,26 +39,28 @@ public:
         rpmBased(0);
     }
 
-    void static rpmBased(int rpm){
-        if(rpm < 8000)
-            for(int x = 0; x < 16; x++)
+    void static rpmBased(int rpm)
+    {
+        if (rpm < 8000)
+            for (int x = 0; x < 16; x++)
                 pixels.setPixelColor(x, blank);
 
-        else{
-            if(rpm > 8000)
-                for(int x = 0; x < 5; x++)
+        else
+        {
+            if (rpm > 8000)
+                for (int x = 0; x < 5; x++)
                     pixels.setPixelColor(x, darkGreen);
 
-            if(rpm > 9000)
-                for(int x = 5; x < 11; x++)
+            if (rpm > 9000)
+                for (int x = 5; x < 11; x++)
                     pixels.setPixelColor(x, darkRed);
 
-            if(rpm > 10500)
-                for(int x = 11; x < 16; x++)
+            if (rpm > 10500)
+                for (int x = 11; x < 16; x++)
                     pixels.setPixelColor(x, darkBlue);
 
-            if(rpm > 12000)
-                for(int x = 0; x < 16; x++)
+            if (rpm > 12000)
+                for (int x = 0; x < 16; x++)
                     pixels.setPixelColor(x, darkRed);
         }
 
@@ -64,4 +68,4 @@ public:
     }
 };
 
-#endif //NEOPIXEL_H
+#endif // NEOPIXEL_H

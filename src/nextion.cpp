@@ -2,27 +2,31 @@
 
 page NextionInterface::current_page = page::LOADING;
 
-NextionInterface::NextionInterface(){}
+NextionInterface::NextionInterface() {}
 
-void NextionInterface::init(){
+void NextionInterface::init()
+{
     Serial1.begin(115200);
     delay(200);
     Serial.println("Nextion Setup");
     switchToLoading();
 }
 
-short NextionInterface::ctof(short celsius){
-    return (celsius * 9/5) +32;
+short NextionInterface::ctof(short celsius)
+{
+    return (celsius * 9 / 5) + 32;
 }
 
-void NextionInterface::sendNextionMessage(String message){
-  Serial1.print(message);
-  Serial1.write(0xFF);
-  Serial1.write(0xFF);
-  Serial1.write(0xFF);
+void NextionInterface::sendNextionMessage(String message)
+{
+    Serial1.print(message);
+    Serial1.write(0xFF);
+    Serial1.write(0xFF);
+    Serial1.write(0xFF);
 }
 
-void NextionInterface::setWaterTemp(unsigned short value){
+void NextionInterface::setWaterTemp(unsigned short value)
+{
     value = ctof(value);
 
     unsigned short max = 200;
@@ -33,21 +37,25 @@ void NextionInterface::setWaterTemp(unsigned short value){
     String instruction = "watertempvalue.txt=\"" + String(value, DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
 
-    if(value > max || value < min){
+    if (value > max || value < min)
+    {
         instruction = "watertempvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
-    else if(value > high || value < low){
+    else if (value > high || value < low)
+    {
         instruction = "watertempvalue.bco=" + String(RGB565_ORANGE, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "watertempvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setOilTemp(unsigned short value){
+void NextionInterface::setOilTemp(unsigned short value)
+{
     unsigned short max = 200;
     unsigned short high = 180;
     unsigned short low = 60;
@@ -56,21 +64,25 @@ void NextionInterface::setOilTemp(unsigned short value){
     String instruction = "oiltempvalue.txt=\"" + String(ctof(value), DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
 
-    if(value > max || value < min){
+    if (value > max || value < min)
+    {
         instruction = "oiltempvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
-    else if(value > high || value < low){
+    else if (value > high || value < low)
+    {
         instruction = "oiltempvalue.bco=" + String(RGB565_ORANGE, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "oiltempvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setOilPressure(unsigned short value){
+void NextionInterface::setOilPressure(unsigned short value)
+{
     unsigned short max = 80;
     unsigned short high = 70;
     unsigned short low = 50;
@@ -79,21 +91,25 @@ void NextionInterface::setOilPressure(unsigned short value){
     String instruction = "oilpressvalue.txt=\"" + String(value, DEC) + " PSI\"";
     sendNextionMessage(instruction);
 
-    if(value > max || value < min){
+    if (value > max || value < min)
+    {
         instruction = "oilpressvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
-    else if(value > high || value < low){
+    else if (value > high || value < low)
+    {
         instruction = "oilpressvalue.bco=" + String(RGB565_ORANGE, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "oilpressvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setVoltage(float value){
+void NextionInterface::setVoltage(float value)
+{
     float max = 15.0;
     float high = 14.0;
     float low = 12.5;
@@ -102,86 +118,105 @@ void NextionInterface::setVoltage(float value){
     String instruction = "voltvalue.txt=\"" + String(value, 2) + " V\"";
     sendNextionMessage(instruction);
 
-    if(value > max || value < min){
+    if (value > max || value < min)
+    {
         instruction = "voltvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
-    else if(value > high || value < low){
+    else if (value > high || value < low)
+    {
         instruction = "voltvalue.bco=" + String(RGB565_ORANGE, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "voltvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setRPM(unsigned short value){
+void NextionInterface::setRPM(unsigned short value)
+{
     String instruction = "rpm.txt=\"" + String(value, DEC) + "\"";
     sendNextionMessage(instruction);
 }
 
-void NextionInterface::setGear(unsigned short value){
+void NextionInterface::setGear(unsigned short value)
+{
     String instruction = "";
-    if(value == 0){
+    if (value == 0)
+    {
         instruction = "gear.txt=\"N\"";
     }
-    else{
-        instruction = "gear.txt=\"" + String(value, DEC) +"\"";
+    else
+    {
+        instruction = "gear.txt=\"" + String(value, DEC) + "\"";
     }
     sendNextionMessage(instruction);
 }
 
-void NextionInterface::setFuelPumpBool(bool value){
+void NextionInterface::setFuelPumpBool(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "fuelpumpbool.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "fuelpumpbool.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setFanBool(bool value){
+void NextionInterface::setFanBool(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "fanbool.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "fanbool.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setWaterPumpBool(bool value){
+void NextionInterface::setWaterPumpBool(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "waterpumpbool.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "waterpumpbool.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setFuelPumpValue(bool value){
+void NextionInterface::setFuelPumpValue(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "fuelpumpvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
 
         instruction = "fuelpumpvalue.txt=\"ON\"";
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "fuelpumpvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
 
@@ -190,17 +225,20 @@ void NextionInterface::setFuelPumpValue(bool value){
     }
 }
 
-void NextionInterface::setFanValue(bool value){
+void NextionInterface::setFanValue(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "fanvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
 
         instruction = "fanvalue.txt=\"ON\"";
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "fanvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
 
@@ -209,17 +247,20 @@ void NextionInterface::setFanValue(bool value){
     }
 }
 
-void NextionInterface::setWaterPumpValue(bool value){
+void NextionInterface::setWaterPumpValue(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "waterpumpvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
 
         instruction = "waterpumpvalue.txt=\"ON\"";
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "waterpumpvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
 
@@ -228,7 +269,8 @@ void NextionInterface::setWaterPumpValue(bool value){
     }
 }
 
-void NextionInterface::setLambda(float value){
+void NextionInterface::setLambda(float value)
+{
     float max = 1.5;
     float high = 1.2;
     float low = 0.8;
@@ -237,31 +279,37 @@ void NextionInterface::setLambda(float value){
     String instruction = "lambdavalue.txt=\"" + String(value, 2) + " V\"";
     sendNextionMessage(instruction);
 
-    if(value > max || value < min){
+    if (value > max || value < min)
+    {
         instruction = "lambdavalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
     }
-    else if(value > high || value < low){
+    else if (value > high || value < low)
+    {
         instruction = "lambdavalue.bco=" + String(RGB565_ORANGE, DEC);
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "lambdavalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
     }
 }
 
-void NextionInterface::setNeutral(bool value){
+void NextionInterface::setNeutral(bool value)
+{
     String instruction = "";
 
-    if(value){
+    if (value)
+    {
         instruction = "neutralvalue.bco=" + String(RGB565_GREEN, DEC);
         sendNextionMessage(instruction);
 
         instruction = "neutralvalue.txt=\"ON\"";
         sendNextionMessage(instruction);
     }
-    else{
+    else
+    {
         instruction = "neutralvalue.bco=" + String(RGB565_RED, DEC);
         sendNextionMessage(instruction);
 
@@ -270,21 +318,25 @@ void NextionInterface::setNeutral(bool value){
     }
 }
 
-void NextionInterface::switchToLoading(){
-    sendNextionMessage("page loading");
+void NextionInterface::switchToLoading()
+{
+    sendNextionMessage("page page1");
     current_page = page::LOADING;
 }
 
-void NextionInterface::switchToStartUp(){
-    sendNextionMessage("page startup");
+void NextionInterface::switchToStartUp()
+{
+    sendNextionMessage("page page2");
     current_page = page::STARTUP;
 }
 
-void NextionInterface::switchToDriver(){
-    sendNextionMessage("page driver");
+void NextionInterface::switchToDriver()
+{
+    sendNextionMessage("page page3");
     current_page = page::DRIVER;
 }
 
-page NextionInterface::getCurrentPage(){
+page NextionInterface::getCurrentPage()
+{
     return current_page;
 }
