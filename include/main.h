@@ -3,9 +3,6 @@
 
 #include <Arduino.h>
 #include <nextion.h>
-#include <can.h>
-
-extern CanInterface can;
-extern NextionInterface screen;
+#include "SteeringWheel.h"
 
 #endif //MAIN_H 

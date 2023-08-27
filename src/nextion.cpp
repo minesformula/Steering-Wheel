@@ -25,14 +25,14 @@ void NextionInterface::sendNextionMessage(String message)
     Serial1.write(0xFF);
 }
 
-void NextionInterface::setWaterTemp(unsigned short value)
+void NextionInterface::setWaterTemp(uint16_t value)
 {
     value = ctof(value);
 
-    unsigned short max = 200;
-    unsigned short high = 180;
-    unsigned short low = 40;
-    unsigned short min = 32;
+    uint16_t max = 200;
+    uint16_t high = 180;
+    uint16_t low = 40;
+    uint16_t min = 32;
 
     String instruction = "watertempvalue.txt=\"" + String(value, DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
@@ -54,12 +54,12 @@ void NextionInterface::setWaterTemp(unsigned short value)
     }
 }
 
-void NextionInterface::setOilTemp(unsigned short value)
+void NextionInterface::setOilTemp(uint16_t value)
 {
-    unsigned short max = 200;
-    unsigned short high = 180;
-    unsigned short low = 60;
-    unsigned short min = 40;
+    uint16_t max = 200;
+    uint16_t high = 180;
+    uint16_t low = 60;
+    uint16_t min = 40;
 
     String instruction = "oiltempvalue.txt=\"" + String(ctof(value), DEC) + " " + char(176) + "F\"";
     sendNextionMessage(instruction);
@@ -81,12 +81,12 @@ void NextionInterface::setOilTemp(unsigned short value)
     }
 }
 
-void NextionInterface::setOilPressure(unsigned short value)
+void NextionInterface::setOilPressure(uint16_t value)
 {
-    unsigned short max = 80;
-    unsigned short high = 70;
-    unsigned short low = 50;
-    unsigned short min = 40;
+    uint16_t max = 80;
+    uint16_t high = 70;
+    uint16_t low = 50;
+    uint16_t min = 40;
 
     String instruction = "oilpressvalue.txt=\"" + String(value, DEC) + " PSI\"";
     sendNextionMessage(instruction);
@@ -135,13 +135,13 @@ void NextionInterface::setVoltage(float value)
     }
 }
 
-void NextionInterface::setRPM(unsigned short value)
+void NextionInterface::setRPM(uint16_t value)
 {
     String instruction = "rpm.txt=\"" + String(value, DEC) + "\"";
     sendNextionMessage(instruction);
 }
 
-void NextionInterface::setGear(unsigned short value)
+void NextionInterface::setGear(uint16_t value)
 {
     String instruction = "";
     if (value == 0)

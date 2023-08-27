@@ -1,5 +1,12 @@
 {
     "files.associations": {
-        "*.tpp": "cpp"
+        "*.tpp": "cpp",
+        "*.ipp": "cpp",
+        "deque": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "rope": "cpp",
+        "dynamic_bitset": "cpp",
+        "cstdint": "cpp"
     }
 }
