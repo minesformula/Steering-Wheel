@@ -3,9 +3,15 @@
 
 #include <Arduino.h>
 
-enum page { LOADING, STARTUP, DRIVER};
+enum page
+{
+    LOADING,
+    STARTUP,
+    DRIVER
+};
 
-class NextionInterface{
+class NextionInterface
+{
 private:
     static short ctof(short celsius);
 
@@ -17,6 +23,7 @@ private:
     static int const RGB565_ORANGE = 47936;
     static int const RGB565_RED = 45056;
     static int const RGB565_BLACK = 0;
+
 public:
     NextionInterface();
 
@@ -59,4 +66,4 @@ public:
     static page getCurrentPage();
 };
 
-#endif //NEXTION_H 
+#endif // NEXTION_H
