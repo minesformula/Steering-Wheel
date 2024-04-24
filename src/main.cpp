@@ -41,14 +41,14 @@ void setup(void) {
   delay(400);
   Serial.begin(9600);
 
-  Serial1.begin(115200);
+  Serial2.begin(115200);
   delay(200);
   Serial.println("Nextion Setup");
   
-  Serial1.print("page1");
-  Serial1.write(0xFF);
-  Serial1.write(0xFF);
-  Serial1.write(0xFF);
+  Serial2.print("page1");
+  Serial2.write(0xFF);
+  Serial2.write(0xFF);
+  Serial2.write(0xFF);
   
 
   pixels.begin(); // INITIALIZE NeoPixel strip object (REQUIRED)
@@ -76,29 +76,30 @@ void loop() {
 
   /*DEMO CODE*/
   if(rotaryPosition(analogRead(A10)) < 3){
-    Serial1.print("page page1");
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
+    Serial2.print("page page1");
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
   }
   else if(rotaryPosition(analogRead(A10)) < 6){
-    Serial1.print("page page2");
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
+    Serial2.print("page page2");
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
   }
   else if(rotaryPosition(analogRead(A10)) < 9){
-    Serial1.print("page page3");
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
+    Serial2.print("page page3");
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
   }
   else{
-    Serial1.print("page page4");
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
+    Serial2.print("page page4");
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
   }
+
 
   if(rotaryPosition(analogRead(A11)) < 3){
     for(int x = 0; x < 16; x++)
@@ -134,7 +135,7 @@ void loop() {
     pixels.show();
   }
   else {
-    pixels.setBrightness(150);
+    pixels.setBrightness(255);
     pixels.show();
   }
   
@@ -161,6 +162,13 @@ void loop() {
   //   CanInterface::send_shift(false, false);
   //   shiftUpState = false;
   // }
+  Serial.print("R1: ");
+  Serial.print(analogRead(A10));
+  Serial.print(", R2: ");
+  Serial.print(analogRead(A11));
+  Serial.print(", R3: ");
+  Serial.println(analogRead(A12));
+
   
   delay(250);
 }
