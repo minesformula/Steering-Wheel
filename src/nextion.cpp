@@ -6,7 +6,7 @@ NextionInterface::NextionInterface() {}
 
 void NextionInterface::init()
 {
-    Serial1.begin(115200);
+    Serial2.begin(115200);
     delay(200);
     Serial.println("Nextion Setup");
     switchToLoading();
@@ -19,10 +19,10 @@ short NextionInterface::ctof(short celsius)
 
 void NextionInterface::sendNextionMessage(String message)
 {
-    Serial1.print(message);
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
-    Serial1.write(0xFF);
+    Serial2.print(message);
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
+    Serial2.write(0xFF);
 }
 
 void NextionInterface::setWaterTemp(unsigned short value)
