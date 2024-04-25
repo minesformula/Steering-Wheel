@@ -4,7 +4,7 @@
 int const shiftUp = 2;
 int const shiftDown = 3;
 
-Adafruit_NeoPixel pixels(16, 2, NEO_GRB + NEO_KHZ800);
+Adafruit_NeoPixel pixels(16, 4, NEO_GRB + NEO_KHZ400);
 
 int rotaryPosition(int voltage){
   if(voltage > 980)
