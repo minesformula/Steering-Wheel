@@ -96,8 +96,28 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
 void CanInterface::send_shift(const bool up, const bool down){
     CAN_message_t msg;
     msg.id = 0x07F0;
-    msg.buf[0] = up;
-    msg.buf[2] = down;
+    msg.len = 4;
+
+    uint16_t volt5 = 5000;
+    uint8_t volt5L = volt5 & 0x00FF;
+    uint8_t volt5H = volt5 >> 8;
+
+    if(up){
+        msg.buf[0] = 0x6F;
+        msg.buf[1] = 0x7F;
+    } else {
+        msg.buf[0] = 0;
+        msg.buf[1] = 0;
+    }
+    
+    if(down){
+        msg.buf[2] = 0x5F;
+        msg.buf[3] = 0x7F;
+    } else {
+        msg.buf[2] = 0;
+        msg.buf[3] = 0;
+    }
+    
     Can0.write(msg);
 }
 
