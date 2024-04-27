@@ -95,9 +95,9 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
 
 void CanInterface::send_shift(const bool up, const bool down){
     CAN_message_t msg;
-    msg.id = 0x7DA;
+    msg.id = 0x07F0;
     msg.buf[0] = up;
-    msg.buf[1] = down;
+    msg.buf[2] = down;
     Can0.write(msg);
 }
 

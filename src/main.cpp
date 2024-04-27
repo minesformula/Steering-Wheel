@@ -1,8 +1,8 @@
 #include "main.h"
 #include "neopixel.h"
 
-int const shiftUp = 2;
-int const shiftDown = 3;
+int const shiftUp = 37;
+int const shiftDown = 36;
 
 void setup(void)
 {
