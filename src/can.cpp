@@ -39,12 +39,10 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
     page currentPage = NextionInterface::getCurrentPage();
     canActive = true;
 
-    if(msg.id == 280){
-        if(msg.buf[0] > 2 && (currentPage != page::DRIVER))
-            NextionInterface::switchToDriver();
-        else if(msg.buf[0] <= 2 && (currentPage != page::STARTUP))
-            NextionInterface::switchToStartUp();
+    if(currentPage != page::DRIVER){
+        NextionInterface::switchToDriver();
     }
+
 
     switch (msg.id){
         case 280:
@@ -86,7 +84,17 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
                 else
                     Serial.println("Fan Error");
             }
-        break;
+            break;
+
+        case 1604:
+            // float oilPr = (msg.buf[6] | (msg.buf[7] << 8)) * 0.1;
+            // NextionInterface::setOilPressure(oilPr);
+            break;
+
+        case 1613:
+            NextionInterface::setGear(msg.buf[7] & 0x0F);
+            break;
+
         
         default:
             break;

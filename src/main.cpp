@@ -3,21 +3,18 @@
 
 #include <IntervalTimer.h>
 
-// Define the interval in microseconds (10 ms = 10000 microseconds)
-const unsigned long interval = 10;
-bool executeFlag = false;
+/* Start of V2 of code */
+
+// Define the callback function
+void shifterCallback();
+
+// Create an IntervalTimer object
+IntervalTimer timer;
 
 int const shiftUp = 37;
 int const shiftDown = 36;
 
-// Timer callback function
-void timerCallback() {
-  // Set the flag to indicate it's time to execute the command
-  executeFlag = true;
-}
-
-void setup(void)
-{
+void setup() {
   pinMode(shiftUp, INPUT_PULLUP);
   pinMode(shiftDown, INPUT_PULLUP);
 
@@ -30,36 +27,27 @@ void setup(void)
 
   CanInterface::init();
 
-  // Initialize the IntervalTimer object
-  IntervalTimer myTimer;
-  
-  // Attach the timer callback function
-  myTimer.begin(timerCallback, interval);
+  timer.begin(shifterCallback, 20000); // 20,000 microseconds = 20 milliseconds = 50 Hz
 }
 
-bool shiftUpState = false;
-bool shiftDownState = false;
-
-void loop()
-{
+void loop() {
   CanInterface::task();
+}
+
+
+
+void shifterCallback() { // This function will be called every 20 milliseconds (50 Hz)
+  static bool shiftUpState = false;
+  static bool shiftDownState = false;
 
   if (digitalRead(shiftUp) == 0 && shiftUpState == false)
-  {
     shiftUpState = true;
-  }
   else if (digitalRead(shiftDown) == 0 && shiftDownState == false)
-  {
     shiftDownState = true;
-  }
   else if (digitalRead(shiftDown) == 1 && shiftDownState == true)
-  {
     shiftDownState = false;
-  }
   else if (digitalRead(shiftUp) == 1 && shiftUpState == true)
-  {
     shiftUpState = false;
-  }
 
   CanInterface::send_shift(shiftUpState, shiftDownState);
 }
