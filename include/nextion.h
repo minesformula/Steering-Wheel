@@ -2,6 +2,7 @@
 #define NEXTION_H
 
 #include <Arduino.h>
+#include "can.h"
 
 enum page
 {
@@ -24,11 +25,12 @@ private:
     static int const RGB565_RED = 45056;
     static int const RGB565_BLACK = 0;
 
+    static bool neutral;
     static uint8_t waterTemp;
     static uint8_t oilTemp;
-    static uint8_t oilPressure;
+    static uint16_t oilPressure;
     static float batteryVoltage;
-    static uint8_t engineRPM;
+    static uint16_t engineRPM;
     static uint8_t lambda;
     static uint8_t gear;
 
@@ -41,13 +43,13 @@ public:
 
     static void setOilTemp(uint8_t value);
 
-    static void setOilPressure(uint8_t value);
+    static void setOilPressure(uint8_t value, uint8_t value2);
 
     static void setVoltage(float value);
 
-    static void setRPM(uint8_t value);
+    static void setRPM(uint16_t value);
 
-    static void setGear(uint8_t value);
+    static void setGear(const CAN_message_t &msg);
 
     static void setFuelPumpBool(bool value);
 

@@ -11,7 +11,7 @@ public:
 
     static bool canActive;
 
-    static FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> Can0;
+    static FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> Can0;
 
     static bool init();
 

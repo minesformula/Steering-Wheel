@@ -4,11 +4,13 @@ page NextionInterface::current_page = page::LOADING;
 
 uint8_t NextionInterface::waterTemp = 0;
 uint8_t NextionInterface::oilTemp = 0;
-uint8_t NextionInterface::oilPressure = 0;
+uint16_t NextionInterface::oilPressure = 0;
 float NextionInterface::batteryVoltage = 0;
-uint8_t NextionInterface::engineRPM = 0;
+uint16_t NextionInterface::engineRPM = 0;
 uint8_t NextionInterface::lambda = 0;
 uint8_t NextionInterface::gear = 0;
+
+bool NextionInterface::neutral = false;
 
 NextionInterface::NextionInterface() {}
 
@@ -53,12 +55,12 @@ void NextionInterface::setOilTemp(uint8_t value)
     }
 }
 
-void NextionInterface::setOilPressure(uint8_t value)
+void NextionInterface::setOilPressure(uint8_t value, uint8_t value2)
 {
-    if(value != oilPressure){
-        oilPressure = value;
-
-        String instruction = "oilpressvalue.txt=\"" + String(value, DEC) + " PSI\"";
+    float oilPresTemp = (value2 | (value << 8)) * 0.1 * 0.145038;
+    if(oilPresTemp != oilPressure){
+        oilPressure = oilPresTemp;
+        String instruction = "oilpressvalue.txt=\"" + String(oilPressure, DEC) + " PSI\"";
         sendNextionMessage(instruction);
     }
 }
@@ -73,7 +75,7 @@ void NextionInterface::setVoltage(float value)
     }
 }
 
-void NextionInterface::setRPM(uint8_t value)
+void NextionInterface::setRPM(uint16_t value)
 {
     if(value != engineRPM){
         engineRPM = value;
@@ -83,23 +85,34 @@ void NextionInterface::setRPM(uint8_t value)
     }   
 }
 
-void NextionInterface::setGear(uint8_t value)
+void NextionInterface::setGear(const CAN_message_t &msg)
 {
-    if(value != gear){
-        gear = value;
+    uint16_t engine_output = msg.buf[7] | (msg.buf[6] << 8);
+    uint16_t engine_input = msg.buf[5] | (msg.buf[4] << 8);
+    float gearRatio = (float) engine_input / engine_output;
+
+    if(gear != gearRatio){
+        gear = gearRatio;
 
         String instruction = "";
-        if (value == 0)
-        {
+        if(neutral){
             instruction = "gear.txt=\"N\"";
-        }
-        else
-        {
-            instruction = "gear.txt=\"" + String(value, DEC) + "\"";
-        }
+        } else if(5.5 < gearRatio && gearRatio < 5.9){
+            instruction = "gear.txt=\"1\"";
+        } else if(3.9 < gearRatio && gearRatio < 4.2){
+            instruction = "gear.txt=\"2\"";
+        } else if(3.4 < gearRatio && gearRatio < 3.6){
+            instruction = "gear.txt=\"3\"";
+        } else if(3.05 < gearRatio && gearRatio < 3.4){
+            instruction = "gear.txt=\"4\"";
+        } else if(2.75 < gearRatio && gearRatio < 3.05){
+            instruction = "gear.txt=\"5\"";
+        } else if(2.3 < gearRatio && gearRatio < 2.75){
+            instruction = "gear.txt=\"6\"";
+        } 
+
         sendNextionMessage(instruction);
-    }
-    
+    }   
 }
 
 void NextionInterface::setFuelPumpBool(bool value)
@@ -245,23 +258,10 @@ void NextionInterface::setLambda(float value)
 
 void NextionInterface::setNeutral(bool value)
 {
-    String instruction = "";
-
-    if (value)
-    {
-        instruction = "neutralvalue.bco=" + String(RGB565_GREEN, DEC);
-        sendNextionMessage(instruction);
-
-        instruction = "neutralvalue.txt=\"ON\"";
-        sendNextionMessage(instruction);
-    }
-    else
-    {
-        instruction = "neutralvalue.bco=" + String(RGB565_RED, DEC);
-        sendNextionMessage(instruction);
-
-        instruction = "neutralvalue.txt=\"OFF\"";
-        sendNextionMessage(instruction);
+    if(value != neutral){
+        neutral = value;
+        if(value)
+            sendNextionMessage("gear.txt=\"N\"");
     }
 }
 

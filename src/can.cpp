@@ -1,9 +1,9 @@
 #include "Arduino.h"
-#include "can.h"
+
 #include "nextion.h"
 #include "neopixel.h"
 
-FlexCAN_T4<CAN1, RX_SIZE_256, TX_SIZE_16> CanInterface::Can0;
+FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> CanInterface::Can0;
 
 CanInterface::CanInterface(){}
 
@@ -87,12 +87,11 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
             break;
 
         case 1604:
-            // float oilPr = (msg.buf[6] | (msg.buf[7] << 8)) * 0.1;
-            // NextionInterface::setOilPressure(oilPr);
+            NextionInterface::setOilPressure(msg.buf[6], msg.buf[7]);
             break;
 
-        case 1613:
-            NextionInterface::setGear(msg.buf[7] & 0x0F);
+        case 1623:
+            NextionInterface::setGear(msg);
             break;
 
         
