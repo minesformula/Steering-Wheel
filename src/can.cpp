@@ -55,7 +55,7 @@ void CanInterface::receive_can_updates(){
             break;
 
         case 281:
-            NextionInterface::setNeutral((msg.buf[4] & 16 ) << 0x10);
+            NextionInterface::setNeutral((msg.buf[4] & 16 ) > 0);
             break;
 
         case 1280:
