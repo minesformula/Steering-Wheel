@@ -107,9 +107,9 @@ void CanInterface::send_shift(const bool up, const bool down){
     msg.id = 0x010;
     msg.len = 4;
 
-    uint16_t volt5 = 5000;
-    uint8_t volt5L = volt5 & 0x00FF;
-    uint8_t volt5H = volt5 >> 8;
+    // uint16_t volt5 = 5000;
+    // uint8_t volt5L = volt5 & 0x00FF;
+    // uint8_t volt5H = volt5 >> 8;
 
     if(up){
         msg.buf[0] = 0x6F;
