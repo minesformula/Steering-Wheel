@@ -5,6 +5,8 @@
 
 FlexCAN_T4<CAN2, RX_SIZE_256, TX_SIZE_16> CanInterface::Can0;
 
+CAN_message_t CanInterface::msg;
+
 CanInterface::CanInterface(){}
 
 bool CanInterface::canActive = false;
@@ -15,8 +17,6 @@ bool CanInterface::init(){
     Can0.setBaudRate(1000000);
     Can0.setMaxMB(16);
     Can0.enableFIFO();
-    Can0.enableFIFOInterrupt();
-    Can0.onReceive(receive_can_updates);
     Can0.mailboxStatus();
     return 1;
 }
@@ -35,7 +35,10 @@ void CanInterface::print_can_sniff(const CAN_message_t &msg){
     Serial.println();
 }
 
-void CanInterface::receive_can_updates(const CAN_message_t &msg){
+void CanInterface::receive_can_updates(){
+    CAN_message_t msg;
+    if (!Can0.readFIFO(msg))return;
+    
     page currentPage = NextionInterface::getCurrentPage();
     canActive = true;
 
@@ -101,8 +104,7 @@ void CanInterface::receive_can_updates(const CAN_message_t &msg){
 }
 
 void CanInterface::send_shift(const bool up, const bool down){
-    CAN_message_t msg;
-    msg.id = 0x07F0;
+    msg.id = 0x010;
     msg.len = 4;
 
     uint16_t volt5 = 5000;

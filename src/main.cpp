@@ -19,7 +19,7 @@ void setup() {
   pinMode(shiftDown, INPUT_PULLUP);
 
   RevLights lights{};
-
+  // 0.162728 0.182735
   delay(400);
   Serial.begin(115200);
 
@@ -31,7 +31,7 @@ void setup() {
 }
 
 void loop() {
-  CanInterface::task();
+  CanInterface::receive_can_updates();
 }
 
 
@@ -48,6 +48,6 @@ void shifterCallback() { // This function will be called every 20 milliseconds (
     shiftDownState = false;
   else if (digitalRead(shiftUp) == 1 && shiftUpState == true)
     shiftUpState = false;
-
+  
   CanInterface::send_shift(shiftUpState, shiftDownState);
 }
